@@ -1,8 +1,10 @@
 package com.example.admin;
 
-import android.content.Intent; // Tambahkan import ini
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View; // Tambahkan import ini
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,14 +17,22 @@ public class OrderManagementActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Enable edge-to-edge display
         EdgeToEdge.enable(this);
-
-        // Set layout yang sesuai
         setContentView(R.layout.activity_order_management);
 
-        // Handle window insets untuk edge-to-edge
+        // Inisialisasi komponen UI
+        ImageButton btnBack = findViewById(R.id.btn_back);
+        LinearLayout tabHome = findViewById(R.id.tab_home);
+        LinearLayout tabAccount = findViewById(R.id.tab_account);
+
+        // Setup click listeners
+        btnBack.setOnClickListener(v -> handleBackNavigation());
+
+        tabHome.setOnClickListener(v -> navigateToMainActivity());
+
+        tabAccount.setOnClickListener(v -> navigateToAccountActivity());
+
+        // Window insets handling
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.order_management_layout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(
@@ -35,23 +45,35 @@ public class OrderManagementActivity extends AppCompatActivity {
         });
     }
 
-    // Tambahkan method untuk navigasi ke MainActivity
-    public void navigateToMainActivity(View view) {
+    private void handleBackNavigation() {
+        // Cek jika ada dalam stack history
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            finish(); // Tutup activity jika tidak ada back stack
+        }
+    }
+
+    private void navigateToMainActivity() {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-        finish(); // Opsional: menutup activity saat ini
+        finishAffinity(); // Membersihkan stack activity
     }
 
-    // Handle tombol back fisik
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        navigateToMainActivity(null);
-    }
-    public void navigateToAccount(View view) {
+    private void navigateToAccountActivity() {
         Intent intent = new Intent(this, AccountActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
+    @Override
+    public void onBackPressed() {
+        // Handle back button fisik
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }
