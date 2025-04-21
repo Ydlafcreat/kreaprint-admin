@@ -25,7 +25,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_arrow_back"
-                android:tint="#FFFFFF"
+                app:tint="#FFFFFF"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Back"
                 android:padding="12dp"/>
@@ -51,7 +51,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:src="@drawable/ic_search"
-                android:tint="#FFFFFF"
+                app:tint="#FFFFFF"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Search"
                 android:padding="12dp"/>
@@ -98,15 +98,15 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_banner"
-                        android:tint="#FF9800" />
+                        app:tint="#FF9800" />
 
                     <TextView
                         android:id="@+id/textViewBanner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Banner & Spanduk"
+                        android:text="Banner dan Spanduk"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textAlignment="center"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
@@ -134,15 +134,15 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_sticker"
-                        android:tint="#FF9800" />
+                        app:tint="#FF9800" />
 
                     <TextView
                         android:id="@+id/textViewSticker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Stiker & Cutting"
+                        android:text="Stiker dan Cutting"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textAlignment="center"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
@@ -169,15 +169,15 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_promotion"
-                        android:tint="#FF9800" />
+                        app:tint="#FF9800" />
 
                     <TextView
                         android:id="@+id/textViewPromosi"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Media Promosi & Signage"
+                        android:text="Media Promosi dan Signage"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textAlignment="center"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
@@ -214,7 +214,7 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_event"
-                        android:tint="#FF9800" />
+                        app:tint="#FF9800" />
 
                     <TextView
                         android:id="@+id/textViewEvent"
@@ -222,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:text="Perlengkapan Event"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textAlignment="center"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
@@ -250,15 +250,15 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_print"
-                        android:tint="#FF9800" />
+                        app:tint="#FF9800" />
 
                     <TextView
                         android:id="@+id/textViewCetak"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Percetakan & Offset"
+                        android:text="Percetakan dan Offset"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textAlignment="center"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
@@ -285,15 +285,15 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:src="@drawable/ic_merchandise"
-                        android:tint="#FF9800" />
+                        app:tint="#FF9800" />
 
                     <TextView
                         android:id="@+id/textViewMerchandise"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Aksesoris & Merchandise"
+                        android:text="Aksesoris dan Merchandise"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textAlignment="center"
                         android:layout_marginTop="8dp" />
                 </LinearLayout>
@@ -367,8 +367,8 @@
 
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteCategory"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#BDBDBD"
                         android:inputType="none"/>
