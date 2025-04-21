@@ -1,0 +1,21 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+
+    <!-- Background kotak -->
+    <path
+        android:fillColor="#7E3A3A"
+        android:pathData="M0,0h80v80h-80z"/>
+
+    <!-- Ikon paket/order -->
+    <group android:pivotX="40" android:pivotY="40">
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M60,20v40h-40v-40h40zM58,22h-36v36h36v-36z"/>
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M40,20l-20,10v5l20,-10 20,10v-5z"/>
+    </group>
+</vector>

@@ -1,0 +1,23 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="56dp"
+    android:height="56dp"
+    android:viewportWidth="56"
+    android:viewportHeight="56">
+
+    <!-- Lingkaran background -->
+    <group>
+        <path
+            android:fillColor="#7E3A3A"
+            android:pathData="M28,28m-28,0a28,28 0 1,1 56,0a28,28 0 1,1 -56,0"/>
+    </group>
+
+    <!-- Outline wajah -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,16c-6.63,0 -12,5.37 -12,12s5.37,12 12,12 12,-5.37 12,-12 -5.37,-12 -12,-12zM28,38c-5.52,0 -10,-4.48 -10,-10s4.48,-10 10,-10 10,4.48 10,10 -4.48,10 -10,10z"/>
+
+    <!-- Mata -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M28,20c-2.21,0 -4,1.79 -4,4s1.79,4 4,4 4,-1.79 4,-4 -1.79,-4 -4,-4z"/>
+</vector>

@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Admin</string>
+    <string name="order_image">Gambar produk pesanan</string>
+    <string name="user_avatar">Foto profil pengguna</string>
+    <string name="user_name">Admin Sambaloge</string>
+    <string name="user_email">admin@sambaloge.com</string>
+
+    <!-- Tambahkan string lainnya jika diperlukan -->
+</resources>
