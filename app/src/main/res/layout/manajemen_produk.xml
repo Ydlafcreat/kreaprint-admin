@@ -12,20 +12,23 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Header with Search -->
-        <!-- Di bagian header -->
-        <ImageView
-            android:id="@+id/btn_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_arrow_back"
-            app:tint="#FFFFFF" />
+        <!-- Header with Back Button and Search -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:layout_marginBottom="24dp">
+
+            <ImageButton
+                android:id="@+id/btn_back"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_arrow_back"
+                android:tint="#FFFFFF"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Back"
+                android:padding="12dp"/>
 
             <TextView
                 android:id="@+id/textViewTitle"
@@ -35,19 +38,23 @@
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-medium" />
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginStart="8dp"/>
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/imageViewSearch"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:src="@drawable/ic_search"
-                app:tint="#FFFFFF" />
+                android:tint="#FFFFFF"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Search"
+                android:padding="12dp"/>
         </LinearLayout>
 
         <!-- Product Categories Section -->
@@ -61,15 +68,15 @@
             android:textStyle="bold"
             android:layout_marginBottom="12dp" />
 
-        <!-- Category Cards -->
+        <!-- First Row of Category Cards -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2"
+            android:weightSum="3"
             android:layout_marginBottom="16dp">
 
-            <!-- Business Card -->
+            <!-- Banner & Spanduk -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -87,17 +94,17 @@
                     android:padding="12dp">
 
                     <ImageView
-                        android:id="@+id/imageViewBusinessCards"
+                        android:id="@+id/imageViewBanner"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_business_cards"
-                        app:tint="#FF9800" />
+                        android:src="@drawable/ic_banner"
+                        android:tint="#FF9800" />
 
                     <TextView
-                        android:id="@+id/textViewBusinessCards"
+                        android:id="@+id/textViewBanner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Kartu Nama"
+                        android:text="Banner & Spanduk"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textAlignment="center"
@@ -105,12 +112,12 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Flyers -->
+            <!-- Stiker & Cutting -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="120dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 app:cardBackgroundColor="#6A2A2A"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
@@ -123,17 +130,52 @@
                     android:padding="12dp">
 
                     <ImageView
-                        android:id="@+id/imageViewFlyers"
+                        android:id="@+id/imageViewSticker"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_flyers"
-                        app:tint="#FF9800" />
+                        android:src="@drawable/ic_sticker"
+                        android:tint="#FF9800" />
 
                     <TextView
-                        android:id="@+id/textViewFlyers"
+                        android:id="@+id/textViewSticker"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Flyer"
+                        android:text="Stiker & Cutting"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Media Promosi & Signage -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#6A2A2A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:id="@+id/imageViewPromosi"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_promotion"
+                        android:tint="#FF9800" />
+
+                    <TextView
+                        android:id="@+id/textViewPromosi"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Media Promosi & Signage"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textAlignment="center"
@@ -147,10 +189,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:weightSum="2"
+            android:weightSum="3"
             android:layout_marginBottom="24dp">
 
-            <!-- Postcards -->
+            <!-- Perlengkapan Event -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -163,35 +205,35 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
                     android:orientation="vertical"
+                    android:gravity="center"
                     android:padding="12dp">
 
                     <ImageView
-                        android:id="@+id/imageViewPostcards"
+                        android:id="@+id/imageViewEvent"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_postcards"
-                        app:tint="#FF9800" />
+                        android:src="@drawable/ic_event"
+                        android:tint="#FF9800" />
 
                     <TextView
-                        android:id="@+id/textViewPostcards"
+                        android:id="@+id/textViewEvent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Postcard"
-                        android:textAlignment="center"
+                        android:text="Perlengkapan Event"
                         android:textColor="#FFFFFF"
-                        android:textSize="14sp" />
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Brosur -->
+            <!-- Percetakan & Offset -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="120dp"
                 android:layout_weight="1"
-                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 app:cardBackgroundColor="#6A2A2A"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="4dp">
@@ -204,17 +246,52 @@
                     android:padding="12dp">
 
                     <ImageView
-                        android:id="@+id/imageViewBrosur"
+                        android:id="@+id/imageViewCetak"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:src="@drawable/ic_brosur"
-                        app:tint="#FF9800" />
+                        android:src="@drawable/ic_print"
+                        android:tint="#FF9800" />
 
                     <TextView
-                        android:id="@+id/textViewBrosur"
+                        android:id="@+id/textViewCetak"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Brosur"
+                        android:text="Percetakan & Offset"
+                        android:textColor="#FFFFFF"
+                        android:textSize="14sp"
+                        android:textAlignment="center"
+                        android:layout_marginTop="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Aksesoris & Merchandise -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="#6A2A2A"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:padding="12dp">
+
+                    <ImageView
+                        android:id="@+id/imageViewMerchandise"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_merchandise"
+                        android:tint="#FF9800" />
+
+                    <TextView
+                        android:id="@+id/textViewMerchandise"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Aksesoris & Merchandise"
                         android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textAlignment="center"
@@ -270,6 +347,31 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#BDBDBD" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Kategori Produk -->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Kategori Produk"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="4dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:hint="Pilih kategori">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoCompleteCategory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"
+                        android:textColorHint="#BDBDBD"
+                        android:inputType="none"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- SKU -->
