@@ -343,6 +343,7 @@
                     android:hint="Masukkan nama produk">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_product_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
@@ -367,8 +368,8 @@
 
                     <AutoCompleteTextView
                         android:id="@+id/autoCompleteCategory"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#BDBDBD"
                         android:inputType="none"/>
@@ -391,6 +392,7 @@
                     android:hint="Masukkan kode SKU">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_sku"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
@@ -414,9 +416,10 @@
                     android:hint="Masukkan harga">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_price"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
+                        android:inputType="numberDecimal"
                         android:textColor="#FFFFFF"
                         android:textColorHint="#BDBDBD" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -437,6 +440,7 @@
                     android:hint="Masukkan deskripsi produk">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_description"
                         android:layout_width="match_parent"
                         android:layout_height="100dp"
                         android:gravity="top"

@@ -1,0 +1,77 @@
+{
+  "project_info": {
+    "project_number": "30457738574",
+    "firebase_url": "https://kreaprint-558bd-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "kreaprint-558bd",
+    "storage_bucket": "kreaprint-558bd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30457738574:android:7b83a680a21d4e4fdada1f",
+        "android_client_info": {
+          "package_name": "com.example.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30457738574-ohcdaao139o68c2e5mov88j99kiuudma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrtg6ij59gnPOIA9DhVxk3rmX3GY5GshA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30457738574-ohcdaao139o68c2e5mov88j99kiuudma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:30457738574:android:270dd554c75e54aedada1f",
+        "android_client_info": {
+          "package_name": "com.example.kreaprint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "30457738574-ttchsa0ka5if0hfv3pehug2e00sk42r9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.kreaprint",
+            "certificate_hash": "adb04dfc60f4e69e7057f14f4196fde0ecc5a039"
+          }
+        },
+        {
+          "client_id": "30457738574-ohcdaao139o68c2e5mov88j99kiuudma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBrtg6ij59gnPOIA9DhVxk3rmX3GY5GshA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "30457738574-ohcdaao139o68c2e5mov88j99kiuudma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
