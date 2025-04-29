@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
 }
-
 android {
     namespace = "com.example.admin"
     compileSdk = 35
@@ -39,7 +38,8 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.android.material:material:1.5.0")
-
+    implementation ("com.android.volley:volley:1.2.1")
+    implementation ("com.google.firebase:firebase-database:20.2.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
