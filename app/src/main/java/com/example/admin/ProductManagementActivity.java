@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -16,6 +17,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class ProductManagementActivity extends AppCompatActivity {
@@ -28,15 +31,16 @@ public class ProductManagementActivity extends AppCompatActivity {
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
 
-    // Variables
-    private String[] categories = {
+    // Daftar kategori
+    private final List<String> categories = Arrays.asList(
+            "Aksesoris dan Merchandise",
             "Banner dan Spanduk",
-            "Stiker dan Cutting",
             "Media Promosi dan Signage",
-            "Perlengkapan Event",
             "Percetakan dan Offset",
-            "Aksesoris dan Merchandise"
-    };
+            "Perlengkapan Event",
+            "Stiker dan Cutting"
+    );
+
     private String imageUrl = "";
     private static final int PICK_IMAGE_REQUEST = 71;
 
@@ -47,23 +51,57 @@ public class ProductManagementActivity extends AppCompatActivity {
 
         // Initialize Firebase
         databaseReference = FirebaseDatabase.getInstance().getReference("products");
-        storageReference = FirebaseStorage.getInstance().getReference("product_images"); // ✅ Diperbaiki
+        storageReference = FirebaseStorage.getInstance().getReference("product_images");
 
         // Initialize UI components
+        initializeViews();
+
+        // Setup category dropdown
+        setupCategoryDropdown();
+
+        // Set up button listeners
+        setupButtonListeners();
+    }
+
+    private void initializeViews() {
         etProductName = findViewById(R.id.et_product_name);
         etSku = findViewById(R.id.et_sku);
         etPrice = findViewById(R.id.et_price);
         etDescription = findViewById(R.id.et_description);
         actvCategory = findViewById(R.id.autoCompleteCategory);
 
-        // Setup category dropdown
+        // Atur agar tidak bisa edit manual
+        actvCategory.setKeyListener(null);
+    }
+
+    private void setupCategoryDropdown() {
+        // Buat adapter dengan custom layout
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this,
-                android.R.layout.simple_dropdown_item_1line,
+                R.layout.dropdown_menu_item,
                 categories
         );
+
         actvCategory.setAdapter(adapter);
 
+        // Atur behavior dropdown
+        actvCategory.setOnClickListener(v -> actvCategory.showDropDown());
+
+        // Atur ketika focus
+        actvCategory.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                actvCategory.showDropDown();
+            }
+        });
+
+        // Listener ketika item dipilih
+        actvCategory.setOnItemClickListener((parent, view, position, id) -> {
+            String selectedCategory = parent.getItemAtPosition(position).toString();
+            // Kode tambahan jika diperlukan
+        });
+    }
+
+    private void setupButtonListeners() {
         // Handle back button
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
@@ -82,9 +120,15 @@ public class ProductManagementActivity extends AppCompatActivity {
         String priceStr = etPrice.getText().toString().trim();
         String description = etDescription.getText().toString().trim();
 
-        // Validate inputs
+        // Validasi input
         if (name.isEmpty() || category.isEmpty() || sku.isEmpty() || priceStr.isEmpty()) {
             Toast.makeText(this, "Harap isi semua field wajib", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Validasi kategori
+        if (!categories.contains(category)) {
+            Toast.makeText(this, "Pilih kategori yang valid dari daftar", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -107,11 +151,11 @@ public class ProductManagementActivity extends AppCompatActivity {
         // Save to Firebase
         databaseReference.child(productId).setValue(product)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(ProductManagementActivity.this, "Produk berhasil disimpan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Produk berhasil disimpan", Toast.LENGTH_SHORT).show();
                     clearForm();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(ProductManagementActivity.this, "Gagal menyimpan produk: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Gagal menyimpan produk: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -119,7 +163,7 @@ public class ProductManagementActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Pilih Gambar"), PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -131,15 +175,14 @@ public class ProductManagementActivity extends AppCompatActivity {
             Uri filePath = data.getData();
 
             ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setTitle("Mengunggah...");
             progressDialog.show();
 
-            // ✅ Diperbaiki: Gunakan storageReference yang sudah diinisialisasi
             StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
             ref.putFile(filePath)
                     .addOnSuccessListener(taskSnapshot -> {
                         progressDialog.dismiss();
-                        Toast.makeText(this, "Gambar berhasil diupload", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Gambar berhasil diunggah", Toast.LENGTH_SHORT).show();
 
                         // Get download URL
                         ref.getDownloadUrl().addOnSuccessListener(uri -> {
@@ -148,11 +191,11 @@ public class ProductManagementActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         progressDialog.dismiss();
-                        Toast.makeText(this, "Gagal upload gambar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Gagal mengunggah gambar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     })
                     .addOnProgressListener(taskSnapshot -> {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                        progressDialog.setMessage("Terkirim " + (int) progress + "%");
                     });
         }
     }

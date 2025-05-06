@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="product_categories">
+        <item>Aksesoris dan Merchandise</item>
+        <item>Banner dan Spanduk</item>
+        <item>Media Promosi dan Signage</item>
+        <item>Percetakan dan Offset</item>
+        <item>Perlengkapan Event</item>
+        <item>Stiker dan Cutting</item>
+    </string-array>
+</resources>

@@ -1,23 +1,24 @@
 package com.example.admin;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
 
-    private final List<Customer> customers;
-    private final Context context;
+    private List<Customer> customers;
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public CustomerAdapter(List<Customer> customers, Context context) {
+    public CustomerAdapter(List<Customer> customers) {
         this.customers = customers;
-        this.context = context;
     }
 
     @NonNull
@@ -31,7 +32,13 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position) {
         Customer customer = customers.get(position);
-        holder.bind(customer, context);
+        holder.tvName.setText(customer.getName());
+        holder.tvEmail.setText(customer.getEmail());
+        holder.tvDate.setText(dateFormat.format(customer.getRegistrationDate()));
+        holder.tvStatus.setText(customer.isActive() ? "Aktif" : "Nonaktif");
+        holder.tvStatus.setTextColor(customer.isActive() ?
+                holder.itemView.getContext().getColor(android.R.color.holo_green_light) :
+                holder.itemView.getContext().getColor(android.R.color.holo_red_light));
     }
 
     @Override
@@ -39,34 +46,20 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         return customers.size();
     }
 
+    public void updateData(List<Customer> newCustomers) {
+        customers = newCustomers;
+        notifyDataSetChanged();
+    }
+
     static class CustomerViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tvName;
-        private final TextView tvEmail;
-        private final TextView tvStatus;
+        TextView tvName, tvEmail, tvDate, tvStatus;
 
         public CustomerViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = itemView.findViewById(R.id.tv_customer_name);
             tvEmail = itemView.findViewById(R.id.tv_customer_email);
+            tvDate = itemView.findViewById(R.id.tv_customer_date);
             tvStatus = itemView.findViewById(R.id.tv_customer_status);
-        }
-
-        public void bind(Customer customer, Context context) {
-            tvName.setText(customer.getName());
-            tvEmail.setText(customer.getEmail());
-            tvStatus.setText(customer.getStatus());
-
-            // Set status color
-            int colorRes = getStatusColor(customer.getStatus());
-            tvStatus.setTextColor(ContextCompat.getColor(context, colorRes));
-        }
-
-        private int getStatusColor(String status) {
-            switch (status) {
-                case "Aktif": return R.color.green;
-                case "Baru": return R.color.orange;
-                default: return R.color.gray;
-            }
         }
     }
 }

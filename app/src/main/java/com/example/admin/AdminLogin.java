@@ -1,6 +1,5 @@
 package com.example.admin;
 
-
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,7 +46,6 @@ public class AdminLogin extends AppCompatActivity {
             return;
         }
 
-        // Kirim data ke backend (ganti URL sesuai server)
         String url = "https://your-server.com/register";
 
         StringRequest request = new StringRequest(Request.Method.POST, url,
