@@ -1,8 +1,23 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Admin" parent="Theme.Material3.DayNight.NoActionBar">
+<!--    <style name="Base.Theme.Admin" parent="Theme.Material3.DayNight.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your light theme here. &ndash;&gt;-->
+<!--        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;-->
+<!--    </style>-->
+    <style name="Base.Theme.Admin" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="fontFamily">@font/font_content</item>
+        <item name="android:fontFamily">@font/font_content</item>
+    </style>
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_color</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_kreaprint_round</item>
+
+        <!-- Required for animated icons. -->
+        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="postSplashScreenTheme">@style/Theme.AppCompat.NoActionBar</item>
     </style>
 
     <style name="Theme.Admin" parent="Base.Theme.Admin" />

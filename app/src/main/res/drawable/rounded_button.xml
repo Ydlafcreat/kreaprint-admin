@@ -3,8 +3,8 @@
     <corners android:radius="24dp" />
     <solid android:color="#FF9800" /> <!-- Warna orange -->
     <padding
-        android:left="16dp"
-        android:top="8dp"
-        android:right="16dp"
-        android:bottom="8dp" />
+        android:left="14dp"
+        android:top="7dp"
+        android:right="14dp"
+        android:bottom="7dp" />
 </shape>

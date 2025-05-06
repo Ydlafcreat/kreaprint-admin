@@ -2,68 +2,136 @@ package com.example.admin;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.example.admin.ui.BerandaFragment;
+import com.example.admin.ui.PesananFragment;
+import com.example.admin.ui.ProfileFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.core.splashscreen.SplashScreen;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
+    private BottomNavigationView bottomNavigationView;
+    private FrameLayout frameLayout;
+
+    private final Handler debounceHandler = new Handler(Looper.getMainLooper());
+    private Runnable debounceRunnable;
+    private static final long DEBOUNCE_DELAY = 300;
+    private int currentFragmentId = -1;
+
+    private final Map<Integer, Fragment> fragmentMap = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        bottomNavigationView = findViewById(R.id.main_bottom_nav);
+        frameLayout = findViewById(R.id.fragment_container);
+
+        fragmentMap.put(R.id.home, new BerandaFragment());
+        fragmentMap.put(R.id.pesanan, new PesananFragment());
+//        fragmentMap.put(R.id.profile, new ProfileFragment());
+
+        if (savedInstanceState == null) {
+            loadFragment(R.id.home, false);
+            currentFragmentId = R.id.home;
+            bottomNavigationView.setSelectedItemId(R.id.home);
+            updateActiveIcon(R.id.home);
+        } else {
+            currentFragmentId = savedInstanceState.getInt("CURRENT_FRAGMENT_ID", R.id.home);
+            bottomNavigationView.setSelectedItemId(currentFragmentId);
+            updateActiveIcon(currentFragmentId);
+        }
+
+        bottomNavigationView.setOnItemSelectedListener(this::onNavigationItemSelected);
     }
 
-    // Update method untuk konsistensi navigasi
-    public void navigateToOrderManagement(View view) {
-        Intent intent = new Intent(this, OrderManagementActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(intent);
-        finish(); // Opsional: tutup activity saat ini
+    private boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (itemId == currentFragmentId) {
+            return false;
+        }
+
+        debounceHandler.removeCallbacks(debounceRunnable);
+        debounceRunnable = () -> loadFragment(itemId, true);
+        debounceHandler.postDelayed(debounceRunnable, DEBOUNCE_DELAY);
+
+        return true;
     }
 
-    // Handle tombol back untuk konsistensi
+    private void loadFragment(int fragmentId, boolean useAnimation) {
+        Fragment fragment = fragmentMap.get(fragmentId);
+        if (fragment != null && !getSupportFragmentManager().isStateSaved()) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+            if (useAnimation) {
+                setFragmentTransactionAnimation(transaction, fragmentId);
+            }
+
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.commit();
+            currentFragmentId = fragmentId;
+            updateActiveIcon(fragmentId);
+        }
+    }
+
+    private void setFragmentTransactionAnimation(FragmentTransaction transaction, int newFragmentId) {
+        if (newFragmentId > currentFragmentId) {
+            transaction.setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+            );
+        } else if (newFragmentId < currentFragmentId) {
+            transaction.setCustomAnimations(
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right,
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left
+            );
+        }
+    }
+
+    private void updateActiveIcon(int itemId) {
+        bottomNavigationView.getMenu().findItem(R.id.home)
+                .setIcon(itemId == R.id.home ? R.drawable.ic_home_fill : R.drawable.ic_home_line);
+
+        bottomNavigationView.getMenu().findItem(R.id.pesanan)
+                .setIcon(itemId == R.id.pesanan ? R.drawable.ic_order_fill : R.drawable.ic_order_line);
+
+//        bottomNavigationView.getMenu().findItem(R.id.profile)
+//                .setIcon(itemId == R.id.profile ? R.drawable.ic_user_fill : R.drawable.ic_user_line);
+    }
+
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        // Tambahkan logika tambahan jika diperlukan
-    }
-    public void navigateToTransactionManagement(View view) {
-        Intent intent = new Intent(this, TransactionManagementActivity.class);
-        startActivity(intent);
-    }
-    // Di MainActivity.java
-    public void navigateToCustomerDetail(View view) {
-        try {
-            Intent intent = new Intent(this, CustomerDetailActivity.class);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void navigateToProductManagement(View view) {
-        try {
-            Intent intent = new Intent(this, ProductManagementActivity.class);
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-    public void navigateToAccount(View view) {
-        Intent intent = new Intent(this, AccountActivity.class);
-        startActivity(intent);
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("CURRENT_FRAGMENT_ID", currentFragmentId);
     }
 }

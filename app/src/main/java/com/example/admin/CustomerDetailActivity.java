@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.admin.components.CustomBackToolbar;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -34,11 +35,17 @@ public class CustomerDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_customer_detail);
 
-        initializeViews();
-        setupRecyclerView();
-        initializeFirestore();
-        loadCustomerData();
+        CustomBackToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setToolbarTitle("Detail Pelanggan");
+        toolbar.showBackButton(true);
+
+//        initializeViews();
+//        setupRecyclerView();
+//        initializeFirestore();
+//        loadCustomerData();
     }
+
+
 
     private void initializeViews() {
         tvTotalCustomers = findViewById(R.id.tv_total_customers);

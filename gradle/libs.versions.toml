@@ -16,6 +16,7 @@ firebaseDatabase = "21.0.0"  # Untuk CircleImageView
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+splashscreen = { group = "androidx.core", name = "core-splashscreen", version = "1.0.1" }
 
 # AndroidX
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -30,5 +31,5 @@ circle-imageview = { group = "de.hdodenhof", name = "circleimageview", version.r
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }  # CircleImageView
 
 [plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
+android-application = { id = "com.android.application", version = "8.8.2" }
 google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }

@@ -1,15 +1,102 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-<string name="app_name">Kreaprint Admin</string>
-<string name="create_account">Create an account</string>
-<string name="username">Username</string>
-<string name="email">Email</string>
-<string name="password">Password</string>
-<string name="sign_up">Sign up</string>
-<string name="already_have_account">Saya memiliki akun Login</string>
+    <string name="app_name">Kreaprint Admin</string>
+    <string name="create_account">Create an account</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign up</string>
+    <string name="already_have_account">Saya memiliki akun Login</string>
     <string name="order_image">Gambar produk pesanan</string>
     <string name="user_avatar">Foto profil pengguna</string>
     <string name="user_name">Admin Sambaloge</string>
     <string name="user_email">admin@sambaloge.com</string>
+
+    <!--    General-->
+    <string name="brand_text">KreaPrint</string>
+    <string name="loading_text">Loading…</string>
+
+    <!--    Icons-->
+    <string name="desc_text_google_btn">Google Icon</string>
+
+    <!--    Register/Login Activity-->
+    <string name="text_fullname">Fullname</string>
+    <string name="text_email">Email</string>
+    <string name="text_password">Password</string>
+    <string name="text_login">Login</string>
+
+    <string name="text_reg_heading">Create an account</string>
+    <string name="btn_text_reg">Sign Up</string>
+    <string name="desc_text_reg">By signing up, you agree to our Terms and Privacy Policy.</string>
+    <string name="text_already_have">Saya memiliki akun </string>
+
+    <string name="text_login_heading">Create an account</string>
+    <string name="btn_text_login">Sign Up</string>
+    <string name="desc_text_login">By signing up, you agree to our Terms and Privacy Policy.</string>
+
+    <!--    Change Password -->
+    <string name="text_cp_heading">Ganti Password</string>
+    <string name="text_current_password">Password Saat Ini</string>
+    <string name="text_new_password">Password Baru</string>
+    <string name="text_confirm_password">Konfirmasi Password</string>
+    <string name="btn_text_cp">Simpan Password</string>
+
+    <!--    Edit Profil -->
+    <string name="text_ep_heading">Edit Profil</string>
+    <string name="text_ep_fullname">Nama Lengkap</string>
+    <string name="text_ep_email">Email</string>
+    <string name="btn_text_ep">Simpan Profil</string>
+
+    <!--    Profile Screen-->
+    <string name="ps_orders">Pesanan Saya</string>
+    <string name="ps_change_password">Ganti Password</string>
+    <string name="ps_edit_profile">Edit Profil</string>
+    <string name="ps_default_profile">User</string>
+    <string name="ps_email">email@email.com</string>
+
+    <string name="ps_icon_goto_pesanan">Icon Action Pesanan Saya</string>
+
+    <!--    Orders Screen-->
+    <string name="os_orders">Pesanan</string>
+
+    <!--Order details Screen-->
+    <string name="ods_status_default">Sedang Diproses</string>
+    <string name="ods_status_done">Selesai</string>
+    <string name="ods_btn_status_default">Batalkan</string>
+    <string name="ods_btn_status_done">@string/ods_status_done</string>
+
+    <!--    About Screnn-->
+    <string name="about_screen">About</string>
+    <string name="about_description">KreaPrint adalah layanan percetakan inovatif yang menyediakan berbagai solusi cetak untuk kebutuhan bisnis, promosi, dan personal. </string>
+
+    <!--    Splash Screen   -->
+    <string name="greeting_splash">Cetak Apa Saja, Kapan Saja!</string>
+    <string name="greeting_beranda">Cetak Apa Saja, Kapan Saja!</string>
+    <string name="greeting_slogan">Pesan online, ambil langsung!</string>
+
+    <!--    Main Menu Navigation -->
+    <string name="beranda_navigation">Beranda</string>
+    <string name="pesanan_navigation">Pesanan</string>
+    <string name="profil_navigation">Akun</string>
+
+
+    <!--    Beranda Section Title-->
+    <string name="text_print_products">Produk Cetak</string>
+    <string name="text_hot_products">Produk yang lagi hype🔥</string>
+
+    <string name="text_promo_banner_description">Promo Banner Description</string>
+
+    <!--    Services -->
+    <string name="tv_promo_text">Jasa Cetak?,\n Kreaprint Aja!.</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- __FOR TESTING ONLY-->
+    <string name="default_web_client_id">30457738574-ttchsa0ka5if0hfv3pehug2e00sk42r9.apps.googleusercontent.com</string>
+    <string name="imagekit_public_key">public_MN7oKthFlVuMt4f5bk0p0V5OA30=</string>
+    <string name="imagekit_url_endpoint">https://ik.imagekit.io/kreaprint</string>
+
+    <!--    String Admin-->
+    <string name="default_admin">+6285255553680</string>
 
 </resources>

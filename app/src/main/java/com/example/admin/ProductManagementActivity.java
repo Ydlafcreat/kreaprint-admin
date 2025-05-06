@@ -1,16 +1,23 @@
 package com.example.admin;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.admin.components.CustomBackToolbar;
+import com.example.admin.helper.ToastHelper;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -18,7 +25,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class ProductManagementActivity extends AppCompatActivity {
@@ -26,6 +35,8 @@ public class ProductManagementActivity extends AppCompatActivity {
     // UI References
     private TextInputEditText etProductName, etSku, etPrice, etDescription;
     private AutoCompleteTextView actvCategory;
+
+    private ToastHelper productManagementToast;
 
     // Firebase References
     private DatabaseReference databaseReference;
@@ -46,26 +57,84 @@ public class ProductManagementActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.manajemen_produk);
+        setContentView(R.layout.activity_manajemen_produk);
+
+        CustomBackToolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setToolbarTitle("Manajemen Produk");
+        toolbar.showBackButton(true);
+
+        Button btnTambahProduk = findViewById(R.id.btn_tambah_produk);
+        btnTambahProduk.setOnClickListener(v -> showTambahProdukModal());
+        productManagementToast = new ToastHelper(this);
+
+        initCategoryEvent();
 
         // Initialize Firebase
-        databaseReference = FirebaseDatabase.getInstance().getReference("products");
-        storageReference = FirebaseStorage.getInstance().getReference("product_images");
+//        databaseReference = FirebaseDatabase.getInstance().getReference("products");
+//        storageReference = FirebaseStorage.getInstance().getReference("product_images");
 
         // Initialize UI components
-        initializeViews();
+//        initializeViews();
+//
+//        // Setup category dropdown
+//        setupCategoryDropdown();
+//
+//        // Set up button listeners
+//        setupButtonListeners();
+    }
 
-        // Setup category dropdown
-        setupCategoryDropdown();
+    private void initCategoryEvent() {
+        Map<String, Integer> categoryMap = new HashMap<>();
+        categoryMap.put("Banner dan Spanduk", R.id.cardViewBannerDanSpanduk);
+        categoryMap.put("Sticker dan Cutting", R.id.cardViewStickerDanCutting);
+        categoryMap.put("Media Promosi dan Signage", R.id.cardViewMediaPromosiDanSignage);
+        categoryMap.put("Perlengkapan Event", R.id.cardViewPerlengkapanEvent);
+        categoryMap.put("Percetakan dan Offset", R.id.cardViewPercetakanDanOffset);
+        categoryMap.put("Aksesoris dan Merchandise", R.id.cardViewAksesorisDanMerchandise);
 
-        // Set up button listeners
-        setupButtonListeners();
+        for (Map.Entry<String, Integer> entry : categoryMap.entrySet()) {
+            String categoryName = entry.getKey();
+            int cardViewId = entry.getValue();
+
+            CardView cardView = findViewById(cardViewId);
+            if (cardView != null) {
+                cardView.setOnClickListener(v -> {
+                    Intent intent = new Intent(ProductManagementActivity.this, DetailProdukByKategoriActivity.class);
+                    intent.putExtra("kategori", categoryName);
+                    startActivity(intent);
+                });
+            }
+        }
+    }
+
+
+
+
+    private void showTambahProdukModal() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        View view = LayoutInflater.from(this).inflate(R.layout.modal_tambah_produk, null);
+        dialog.setContentView(view);
+
+        TextView tvTitle = view.findViewById(R.id.tv_title);
+        Button btnConfirm = view.findViewById(R.id.btn_confirm);
+        Button btnCancel = view.findViewById(R.id.btn_cancel);
+
+        btnConfirm.setOnClickListener(v -> {
+            productManagementToast.showToast("Produk Berhasil Ditambahkan!");
+            dialog.dismiss();
+        });
+
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+        });
+
+        dialog.show();
     }
 
     private void initializeViews() {
         etProductName = findViewById(R.id.et_product_name);
-        etSku = findViewById(R.id.et_sku);
         etPrice = findViewById(R.id.et_price);
         etDescription = findViewById(R.id.et_description);
         actvCategory = findViewById(R.id.autoCompleteCategory);
@@ -106,58 +175,57 @@ public class ProductManagementActivity extends AppCompatActivity {
         findViewById(R.id.btn_back).setOnClickListener(v -> finish());
 
         // Handle save button
-        findViewById(R.id.buttonSave).setOnClickListener(v -> saveProduct());
+//        findViewById(R.id.buttonSave).setOnClickListener(v -> saveProduct());
 
         // Handle upload image button
-        findViewById(R.id.buttonUploadImage).setOnClickListener(v -> uploadImage());
+        findViewById(R.id.btn_upload_image).setOnClickListener(v -> uploadImage());
     }
 
-    private void saveProduct() {
-        // Get input values
-        String name = etProductName.getText().toString().trim();
-        String category = actvCategory.getText().toString().trim();
-        String sku = etSku.getText().toString().trim();
-        String priceStr = etPrice.getText().toString().trim();
-        String description = etDescription.getText().toString().trim();
-
-        // Validasi input
-        if (name.isEmpty() || category.isEmpty() || sku.isEmpty() || priceStr.isEmpty()) {
-            Toast.makeText(this, "Harap isi semua field wajib", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Validasi kategori
-        if (!categories.contains(category)) {
-            Toast.makeText(this, "Pilih kategori yang valid dari daftar", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        double price;
-        try {
-            price = Double.parseDouble(priceStr);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Format harga tidak valid", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Create product ID
-        String productId = databaseReference.push().getKey();
-
-        // Create product object
-        Product product = new Product(name, category, sku, price, description);
-        product.setId(productId);
-        product.setImageUrl(imageUrl);
-
-        // Save to Firebase
-        databaseReference.child(productId).setValue(product)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(this, "Produk berhasil disimpan", Toast.LENGTH_SHORT).show();
-                    clearForm();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Gagal menyimpan produk: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
+//    private void saveProduct() {
+//        // Get input values
+//        String name = etProductName.getText().toString().trim();
+//        String category = actvCategory.getText().toString().trim();
+//        String priceStr = etPrice.getText().toString().trim();
+//        String description = etDescription.getText().toString().trim();
+//
+//        // Validasi input
+//        if (name.isEmpty() || category.isEmpty() || priceStr.isEmpty()) {
+//            Toast.makeText(this, "Harap isi semua field wajib", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Validasi kategori
+//        if (!categories.contains(category)) {
+//            Toast.makeText(this, "Pilih kategori yang valid dari daftar", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        double price;
+//        try {
+//            price = Double.parseDouble(priceStr);
+//        } catch (NumberFormatException e) {
+//            Toast.makeText(this, "Format harga tidak valid", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//
+//        // Create product ID
+//        String productId = databaseReference.push().getKey();
+//
+//        // Create product object
+//        Product product = new Product(name, category,  price, description);
+//        product.setId(productId);
+//        product.setImageUrl(imageUrl);
+//
+//        // Save to Firebase
+//        databaseReference.child(productId).setValue(product)
+//                .addOnSuccessListener(aVoid -> {
+//                    Toast.makeText(this, "Produk berhasil disimpan", Toast.LENGTH_SHORT).show();
+//                    clearForm();
+//                })
+//                .addOnFailureListener(e -> {
+//                    Toast.makeText(this, "Gagal menyimpan produk: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+//                });
+//    }
 
     private void uploadImage() {
         Intent intent = new Intent();

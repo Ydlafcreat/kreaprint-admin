@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ButtonPrimary" parent="Base.Theme.Admin">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:radius">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/font_content</item>
+        <item name="android:background">@drawable/button_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="BerandaSpinner" parent="Widget.AppCompat.Spinner">
+        <item name="android:background">@color/primary_color</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:popupBackground">#9D6C6C</item>
+    </style>
+    <style name="OutlinedButtonPrimary" parent="Base.Theme.Admin">
+        <item name="android:textColor">@color/dark_text_color</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:radius">10dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/font_content</item>
+        <item name="android:background">@drawable/border_accent</item>
+    </style>
+</resources>

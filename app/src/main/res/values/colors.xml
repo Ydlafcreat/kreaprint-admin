@@ -7,4 +7,17 @@
     <color name="gray">#9E9E9E</color>
     <color name="primary_blue">#1E90FF</color>
 
+    <color name="disable">#6A6A6A</color>
+    <color name="accent_color">#FF0D7DF2</color>
+    <color name="accent_color_shade">#FF0A64C2</color>
+    <color name="primary_color">#FF541D1D</color>
+    <color name="shade_primary_color">#FF783E3E</color>
+    <color name="text_color">#FFFCF7F7</color>
+    <color name="shade_text_color">#FFEBE6DC</color>
+    <color name="dark_text_color">#FF1B0D0D</color>
+
+    <!--    Pesanan Status-->
+    <color name="order_status_done">#21B710</color>
+    <color name="order_status_ongoing">#FF5900</color>
+    <color name="order_status_cancelled">#B71010</color>
 </resources>
