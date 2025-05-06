@@ -20,6 +20,9 @@
         android:theme="@style/Theme.Admin"
         tools:targetApi="31">
         <activity
+            android:name=".DetailProduk"
+            android:exported="false" />
+        <activity
             android:name=".DetailProdukByKategoriActivity"
             android:exported="false" />
         <activity
@@ -34,7 +37,7 @@
         <activity
             android:name=".OrderManagementActivity"
             android:exported="true"
-            android:theme="@style/Theme.Design.NoActionBar"></activity>
+            android:theme="@style/Theme.Design.NoActionBar" />
         <activity
             android:name=".CustomerDetailActivity"
             android:exported="true"

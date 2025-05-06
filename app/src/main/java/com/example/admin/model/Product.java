@@ -1,4 +1,4 @@
-package com.example.admin;
+package com.example.admin.model;
 
 import com.google.firebase.Timestamp;
 import java.util.ArrayList;

@@ -9,7 +9,8 @@ activity = "1.9.0"
 constraintlayout = "2.2.0-alpha13"
 circleImageView = "3.1.0"
 googleGmsGoogleServices = "4.4.2"
-firebaseDatabase = "21.0.0"  # Untuk CircleImageView
+firebaseDatabase = "21.0.0"
+googleid = "1.1.1"  # Untuk CircleImageView
 
 [libraries]
 # Testing
@@ -28,7 +29,8 @@ material = { group = "com.google.android.material", name = "material", version.r
 
 # Third Party
 circle-imageview = { group = "de.hdodenhof", name = "circleimageview", version.ref = "circleImageView" }
-firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }  # CircleImageView
+firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }  # CircleImageView
 
 [plugins]
 android-application = { id = "com.android.application", version = "8.8.2" }

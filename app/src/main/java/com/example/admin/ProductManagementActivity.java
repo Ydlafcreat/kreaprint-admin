@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -17,13 +18,18 @@ import android.widget.Toast;
 
 import com.example.admin.components.CustomBackToolbar;
 import com.example.admin.helper.ToastHelper;
+import com.example.admin.helper.firebase.FirestoreCallback;
+import com.example.admin.helper.firebase.ProductRepository;
+import com.example.admin.model.Product;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.Timestamp;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +76,7 @@ public class ProductManagementActivity extends AppCompatActivity {
         productManagementToast = new ToastHelper(this);
 
         initCategoryEvent();
-
+//        testAddProduk();
         // Initialize Firebase
 //        databaseReference = FirebaseDatabase.getInstance().getReference("products");
 //        storageReference = FirebaseStorage.getInstance().getReference("product_images");
@@ -87,11 +93,11 @@ public class ProductManagementActivity extends AppCompatActivity {
 
     private void initCategoryEvent() {
         Map<String, Integer> categoryMap = new HashMap<>();
-        categoryMap.put("Banner dan Spanduk", R.id.cardViewBannerDanSpanduk);
-        categoryMap.put("Sticker dan Cutting", R.id.cardViewStickerDanCutting);
-        categoryMap.put("Media Promosi dan Signage", R.id.cardViewMediaPromosiDanSignage);
+        categoryMap.put("Banner & Spanduk", R.id.cardViewBannerDanSpanduk);
+        categoryMap.put("Sticker & Cutting", R.id.cardViewStickerDanCutting);
+        categoryMap.put("Media Promosi & Signage", R.id.cardViewMediaPromosiDanSignage);
         categoryMap.put("Perlengkapan Event", R.id.cardViewPerlengkapanEvent);
-        categoryMap.put("Percetakan dan Offset", R.id.cardViewPercetakanDanOffset);
+        categoryMap.put("Percetakan & Offset", R.id.cardViewPercetakanDanOffset);
         categoryMap.put("Aksesoris dan Merchandise", R.id.cardViewAksesorisDanMerchandise);
 
         for (Map.Entry<String, Integer> entry : categoryMap.entrySet()) {
@@ -275,5 +281,44 @@ public class ProductManagementActivity extends AppCompatActivity {
         etPrice.setText("");
         etDescription.setText("");
         imageUrl = "";
+    }
+
+    private void testAddProduk() {
+
+        Log.d("DetailProdukByKategoriActivity", "Success");
+
+        List<String> dummyImages = new ArrayList<>();
+        dummyImages.add("https://example.com/images/signage1.jpg");
+
+        Product newProduct = new Product();
+        newProduct.setId("product-signage-001");
+        newProduct.setName("Neon Box Akrilik");
+        newProduct.setDescription("Neon box akrilik berkualitas tinggi untuk branding toko Anda.");
+        newProduct.setPrice(350000);
+        newProduct.setImageUrls(dummyImages);
+        newProduct.setCategoryId("Banner & Spanduk");
+        newProduct.setActive(true);
+        newProduct.setFavoriteCount(12);
+        newProduct.setSalesCount(8);
+        newProduct.setTips("Pasang di area yang terang untuk efek visual maksimal.");
+        newProduct.setCreatedAt(Timestamp.now());
+
+        ToastHelper toastHelper = new ToastHelper(this);
+        ProductRepository productRepository = new ProductRepository();
+        productRepository.addProduct(newProduct, new FirestoreCallback<Boolean>() {
+
+
+            @Override
+            public void onSuccess(Boolean result) {
+                Log.d("DetailProdukByKategoriActivity", "Success");
+                toastHelper.showToast("Fail");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.d("DetailProdukByKategoriActivity", "Fail");
+                toastHelper.showToast("Fail");
+            }
+        }); // pastikan method ini menerima argumen Product
     }
 }
