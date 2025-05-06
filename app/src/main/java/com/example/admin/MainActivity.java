@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentMap.put(R.id.home, new BerandaFragment());
         fragmentMap.put(R.id.pesanan, new PesananFragment());
-        fragmentMap.put(R.id.profile, new ProfileFragment());
+//        fragmentMap.put(R.id.profile, new ProfileFragment());
 
         if (savedInstanceState == null) {
             loadFragment(R.id.home, false);
@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.getMenu().findItem(R.id.profile)
                 .setIcon(itemId == R.id.profile ? R.drawable.ic_user_fill : R.drawable.ic_user_line);
     }
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {

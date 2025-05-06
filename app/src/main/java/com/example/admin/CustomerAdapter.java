@@ -8,16 +8,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.admin.model.User;
+
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
 
-    private List<Customer> customers;
+    private List<User> customers;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
 
-    public CustomerAdapter(List<Customer> customers) {
+    public CustomerAdapter(List<User> customers) {
         this.customers = customers;
     }
 
@@ -31,7 +33,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position) {
-        Customer customer = customers.get(position);
+        User customer = customers.get(position);
         holder.tvName.setText(customer.getName());
         holder.tvEmail.setText(customer.getEmail());
         holder.tvDate.setText(dateFormat.format(customer.getRegistrationDate()));
@@ -46,7 +48,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         return customers.size();
     }
 
-    public void updateData(List<Customer> newCustomers) {
+    public void updateData(List<User> newCustomers) {
         customers = newCustomers;
         notifyDataSetChanged();
     }

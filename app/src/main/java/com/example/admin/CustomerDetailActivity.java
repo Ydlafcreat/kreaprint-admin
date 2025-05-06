@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.admin.components.CustomBackToolbar;
+import com.example.admin.model.User;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -39,10 +42,11 @@ public class CustomerDetailActivity extends AppCompatActivity {
         toolbar.setToolbarTitle("Detail Pelanggan");
         toolbar.showBackButton(true);
 
-//        initializeViews();
-//        setupRecyclerView();
-//        initializeFirestore();
-//        loadCustomerData();
+
+        initializeViews();
+        setupRecyclerView();
+        initializeFirestore();
+        loadCustomerData();
     }
 
 
@@ -66,8 +70,7 @@ public class CustomerDetailActivity extends AppCompatActivity {
 
     private void loadCustomerData() {
         registration = db.collection("users")
-                .orderBy("registrationDate", Query.Direction.DESCENDING)
-                .limit(10)
+                .orderBy("createdAt", Query.Direction.DESCENDING)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         Log.w("Firestore", "Listen failed.", error);
@@ -76,7 +79,8 @@ public class CustomerDetailActivity extends AppCompatActivity {
                     }
 
                     if (value != null && !value.isEmpty()) {
-                        processCustomerData(value.getDocuments());
+                        List<DocumentSnapshot> documents = value.getDocuments();
+                        processCustomerData(documents);
                     } else {
                         Toast.makeText(this, "Tidak ada data pelanggan", Toast.LENGTH_SHORT).show();
                     }
@@ -84,37 +88,47 @@ public class CustomerDetailActivity extends AppCompatActivity {
     }
 
     private void processCustomerData(List<DocumentSnapshot> documents) {
-        List<Customer> customers = new ArrayList<>();
+        List<User> customers = new ArrayList<>();
+        List<User> ac = new ArrayList<>();
+        List<User> nc = new ArrayList<>();
+
+        int totalCustomers = 0;
         int activeCount = 0;
-        Date oneWeekAgo = new Date(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
+        Date oneWeekAgo = new Date(System.currentTimeMillis() - 7L * 24 * 60 * 60 * 1000);
         int newCount = 0;
 
         for (DocumentSnapshot document : documents) {
-            Customer customer = document.toObject(Customer.class);
-            if (customer != null) {
-                customer.setId(document.getId());
-                customers.add(customer);
+            User user = document.toObject(User.class);
+            if (user != null) {
+                user.setId(document.getId());
+                customers.add(user);
 
-                if (customer.isActive()) {
+                if (user.isActive()) {
+                    ac.add(user);
                     activeCount++;
                 }
 
-                if (customer.getRegistrationDate() != null &&
-                        customer.getRegistrationDate().after(oneWeekAgo)) {
+                Date regDate = user.getRegistrationDate();
+                if (regDate != null && regDate.after(oneWeekAgo)) {
+                    nc.add(user);
                     newCount++;
                 }
             }
         }
-
-        updateUI(customers, activeCount, newCount);
+        totalCustomers = customers.size();
+        updateUI(nc, totalCustomers, activeCount, newCount);
     }
 
-    private void updateUI(List<Customer> customers, int activeCount, int newCount) {
-        tvTotalCustomers.setText(String.valueOf(customers.size()));
+
+
+
+    private void updateUI(List<User> customers, int totalCustomers, int activeCount, int newCount) {
+        tvTotalCustomers.setText(String.valueOf(totalCustomers));
         tvActiveCustomers.setText(String.valueOf(activeCount));
         tvNewCustomers.setText(String.valueOf(newCount));
         customerAdapter.updateData(customers);
     }
+
 
     @Override
     protected void onDestroy() {
