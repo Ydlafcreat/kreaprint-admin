@@ -124,8 +124,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.getMenu().findItem(R.id.pesanan)
                 .setIcon(itemId == R.id.pesanan ? R.drawable.ic_order_fill : R.drawable.ic_order_line);
 
-        bottomNavigationView.getMenu().findItem(R.id.profile)
-                .setIcon(itemId == R.id.profile ? R.drawable.ic_user_fill : R.drawable.ic_user_line);
+        //bottomNavigationView.getMenu().findItem(R.id.profile)
+                //.setIcon(itemId == R.id.profile ? R.drawable.ic_user_fill : R.drawable.ic_user_line);
     }
 
     @Override

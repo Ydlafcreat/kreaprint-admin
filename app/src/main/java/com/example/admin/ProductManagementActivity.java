@@ -5,8 +5,11 @@ import androidx.cardview.widget.CardView;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,7 @@ import android.widget.Toast;
 import com.example.admin.components.CustomBackToolbar;
 import com.example.admin.helper.ToastHelper;
 import com.example.admin.helper.firebase.FirestoreCallback;
+import com.example.admin.helper.firebase.ImgurUploader;
 import com.example.admin.helper.firebase.ProductRepository;
 import com.example.admin.model.Product;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -29,8 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +47,7 @@ import java.util.UUID;
 public class ProductManagementActivity extends AppCompatActivity {
 
     // UI References
-    private TextInputEditText etProductName, etSku, etPrice, etDescription;
+    private TextInputEditText etProductName, etPrice, etDescription;
     private AutoCompleteTextView actvCategory;
 
     private ToastHelper productManagementToast;
@@ -63,10 +71,10 @@ public class ProductManagementActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manajemen_produk);
 
+        // Initialize UI components
         CustomBackToolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setToolbarTitle("Manajemen Produk");
         toolbar.showBackButton(true);
@@ -75,20 +83,11 @@ public class ProductManagementActivity extends AppCompatActivity {
         btnTambahProduk.setOnClickListener(v -> showTambahProdukModal());
         productManagementToast = new ToastHelper(this);
 
-        initCategoryEvent();
-//        testAddProduk();
         // Initialize Firebase
-//        databaseReference = FirebaseDatabase.getInstance().getReference("products");
-//        storageReference = FirebaseStorage.getInstance().getReference("product_images");
+        databaseReference = FirebaseDatabase.getInstance().getReference("products");
+        storageReference = FirebaseStorage.getInstance().getReference("product_images");
 
-        // Initialize UI components
-//        initializeViews();
-//
-//        // Setup category dropdown
-//        setupCategoryDropdown();
-//
-//        // Set up button listeners
-//        setupButtonListeners();
+        initCategoryEvent();
     }
 
     private void initCategoryEvent() {
@@ -115,123 +114,120 @@ public class ProductManagementActivity extends AppCompatActivity {
         }
     }
 
-
-
-
     private void showTambahProdukModal() {
         BottomSheetDialog dialog = new BottomSheetDialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.modal_tambah_produk, null);
         dialog.setContentView(view);
 
-        TextView tvTitle = view.findViewById(R.id.tv_title);
+        // Initialize all input fields
+        TextInputEditText etProductName = view.findViewById(R.id.et_product_name);
+        AutoCompleteTextView autoCompleteCategory = view.findViewById(R.id.autoCompleteCategory);
+        TextInputEditText etPrice = view.findViewById(R.id.et_price);
+        TextInputEditText etDescription = view.findViewById(R.id.et_description);
+        Button btnUploadImage = view.findViewById(R.id.btn_upload_image);
         Button btnConfirm = view.findViewById(R.id.btn_confirm);
         Button btnCancel = view.findViewById(R.id.btn_cancel);
 
-        btnConfirm.setOnClickListener(v -> {
-            productManagementToast.showToast("Produk Berhasil Ditambahkan!");
-            dialog.dismiss();
-        });
-
-        btnCancel.setOnClickListener(v -> {
-            dialog.dismiss();
-        });
-
-        dialog.show();
-    }
-
-    private void initializeViews() {
-        etProductName = findViewById(R.id.et_product_name);
-        etPrice = findViewById(R.id.et_price);
-        etDescription = findViewById(R.id.et_description);
-        actvCategory = findViewById(R.id.autoCompleteCategory);
-
-        // Atur agar tidak bisa edit manual
-        actvCategory.setKeyListener(null);
-    }
-
-    private void setupCategoryDropdown() {
-        // Buat adapter dengan custom layout
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+        // Setup category dropdown
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(
                 this,
                 R.layout.dropdown_menu_item,
                 categories
         );
-
-        actvCategory.setAdapter(adapter);
-
-        // Atur behavior dropdown
-        actvCategory.setOnClickListener(v -> actvCategory.showDropDown());
-
-        // Atur ketika focus
-        actvCategory.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus) {
-                actvCategory.showDropDown();
-            }
-        });
-
-        // Listener ketika item dipilih
-        actvCategory.setOnItemClickListener((parent, view, position, id) -> {
+        autoCompleteCategory.setAdapter(categoryAdapter);
+        autoCompleteCategory.setOnItemClickListener((parent, view1, position, id) -> {
             String selectedCategory = parent.getItemAtPosition(position).toString();
-            // Kode tambahan jika diperlukan
         });
+
+        // Handle image upload
+        btnUploadImage.setOnClickListener(v -> {
+            uploadImage();
+        });
+
+        // Handle confirm button
+        btnConfirm.setOnClickListener(v -> {
+            // Get input values
+            String name = etProductName.getText().toString().trim();
+            String category = autoCompleteCategory.getText().toString().trim();
+            String priceStr = etPrice.getText().toString().trim();
+            String description = etDescription.getText().toString().trim();
+
+            // Validate inputs
+            if (name.isEmpty() || category.isEmpty() || priceStr.isEmpty()) {
+                productManagementToast.showToast("Harap isi semua field wajib!");
+                return;
+            }
+
+            if (!categories.contains(category)) {
+                productManagementToast.showToast("Pilih kategori yang valid!");
+                return;
+            }
+
+            // Create new product object
+            Product newProduct = new Product();
+            double price = 0.0;
+
+            try {
+                price = Double.parseDouble(priceStr);
+                newProduct.setPrice((int) Math.round(price));
+            } catch (NumberFormatException e) {
+                productManagementToast.showToast("Format harga tidak valid!");
+                return;
+            }
+
+            // Set product properties
+            newProduct.setId(UUID.randomUUID().toString());
+            newProduct.setName(name);
+            newProduct.setCategoryId(category);
+            newProduct.setDescription(description);
+            newProduct.setActive(true);
+            newProduct.setCreatedAt(Timestamp.now());
+
+            // If image was uploaded
+            if (!imageUrl.isEmpty()) {
+                List<String> imageUrls = new ArrayList<>();
+                imageUrls.add(imageUrl);
+                newProduct.setImageUrls(imageUrls);
+            }
+
+            // Show loading indicator
+            ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Menyimpan produk...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+
+            // Save to Firebase
+            ProductRepository productRepository = new ProductRepository();
+            productRepository.addProduct(newProduct, new FirestoreCallback<Boolean>() {
+                @Override
+                public void onSuccess(Boolean result) {
+                    runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        productManagementToast.showToast("Produk berhasil ditambahkan!");
+                        dialog.dismiss();
+                        imageUrl = ""; // Reset image URL
+                    });
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        productManagementToast.showToast("Gagal menambahkan produk: " + e.getMessage());
+                        Log.e("ProductManagement", "Error adding product", e);
+                    });
+                }
+            });
+        });
+
+        // Handle cancel button
+        btnCancel.setOnClickListener(v -> {
+            dialog.dismiss();
+            imageUrl = ""; // Reset image URL
+        });
+
+        dialog.show();
     }
-
-    private void setupButtonListeners() {
-        // Handle back button
-        findViewById(R.id.btn_back).setOnClickListener(v -> finish());
-
-        // Handle save button
-//        findViewById(R.id.buttonSave).setOnClickListener(v -> saveProduct());
-
-        // Handle upload image button
-        findViewById(R.id.btn_upload_image).setOnClickListener(v -> uploadImage());
-    }
-
-//    private void saveProduct() {
-//        // Get input values
-//        String name = etProductName.getText().toString().trim();
-//        String category = actvCategory.getText().toString().trim();
-//        String priceStr = etPrice.getText().toString().trim();
-//        String description = etDescription.getText().toString().trim();
-//
-//        // Validasi input
-//        if (name.isEmpty() || category.isEmpty() || priceStr.isEmpty()) {
-//            Toast.makeText(this, "Harap isi semua field wajib", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        // Validasi kategori
-//        if (!categories.contains(category)) {
-//            Toast.makeText(this, "Pilih kategori yang valid dari daftar", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        double price;
-//        try {
-//            price = Double.parseDouble(priceStr);
-//        } catch (NumberFormatException e) {
-//            Toast.makeText(this, "Format harga tidak valid", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        // Create product ID
-//        String productId = databaseReference.push().getKey();
-//
-//        // Create product object
-//        Product product = new Product(name, category,  price, description);
-//        product.setId(productId);
-//        product.setImageUrl(imageUrl);
-//
-//        // Save to Firebase
-//        databaseReference.child(productId).setValue(product)
-//                .addOnSuccessListener(aVoid -> {
-//                    Toast.makeText(this, "Produk berhasil disimpan", Toast.LENGTH_SHORT).show();
-//                    clearForm();
-//                })
-//                .addOnFailureListener(e -> {
-//                    Toast.makeText(this, "Gagal menyimpan produk: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                });
-//    }
 
     private void uploadImage() {
         Intent intent = new Intent();
@@ -244,81 +240,109 @@ public class ProductManagementActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri filePath = data.getData();
-
-            ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Mengunggah...");
-            progressDialog.show();
-
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
-            ref.putFile(filePath)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(this, "Gambar berhasil diunggah", Toast.LENGTH_SHORT).show();
-
-                        // Get download URL
-                        ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                            imageUrl = uri.toString();
-                        });
-                    })
-                    .addOnFailureListener(e -> {
-                        progressDialog.dismiss();
-                        Toast.makeText(this, "Gagal mengunggah gambar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnProgressListener(taskSnapshot -> {
-                        double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                        progressDialog.setMessage("Terkirim " + (int) progress + "%");
-                    });
+            uploadImageToImgur(filePath);
         }
     }
 
-    private void clearForm() {
-        etProductName.setText("");
-        actvCategory.setText("");
-        etSku.setText("");
-        etPrice.setText("");
-        etDescription.setText("");
-        imageUrl = "";
+    private void uploadImageToImgur(Uri imageUri) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Mengunggah ke Imgur...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        new Thread(() -> {
+            try {
+                // 1. Kompresi gambar sebelum upload
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                // Kompresi dengan kualitas 80% dan format JPEG
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+                byte[] imageData = baos.toByteArray();
+
+                // 2. Validasi ukuran file (max 8MB)
+                if (imageData.length > 8 * 1024 * 1024) {
+                    runOnUiThread(() -> {
+                        progressDialog.dismiss();
+                        productManagementToast.showToast("Ukuran gambar terlalu besar (max 8MB)");
+                    });
+                    return;
+                }
+
+                // 3. Upload dengan timeout yang lebih panjang
+                ImgurUploader.uploadImage(imageData, new ImgurUploader.UploadCallback() {
+                    @Override
+                    public void onSuccess(String imageUrl) {
+                        runOnUiThread(() -> {
+                            progressDialog.dismiss();
+                            ProductManagementActivity.this.imageUrl = imageUrl;
+                            productManagementToast.showToast("Upload berhasil!");
+                            Log.d("ImgurUpload", "Image URL: " + imageUrl);
+                        });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        runOnUiThread(() -> {
+                            progressDialog.dismiss();
+                            handleImgurError(error);
+                        });
+                    }
+                });
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    progressDialog.dismiss();
+                    productManagementToast.showToast("Error: " + e.getMessage());
+                    Log.e("ImgurUpload", "Error: ", e);
+                });
+            }
+        }).start();
+    }
+
+    private void handleImgurError(String error) {
+        String userMessage;
+
+        if (error.contains("Client-ID")) {
+            userMessage = "Konfigurasi Imgur tidak valid. Hubungi developer";
+        } else if (error.contains("File type invalid")) {
+            userMessage = "Format gambar tidak didukung (Gunakan JPG/PNG)";
+        } else if (error.contains("too large")) {
+            userMessage = "Ukuran gambar terlalu besar (max 8MB)";
+        } else {
+            userMessage = "Gagal upload. Coba gambar lain atau coba lagi nanti";
+        }
+
+        productManagementToast.showToast(userMessage);
+        Log.e("ImgurUpload", "Error details: " + error);
     }
 
     private void testAddProduk() {
-
-        Log.d("DetailProdukByKategoriActivity", "Success");
-
         List<String> dummyImages = new ArrayList<>();
         dummyImages.add("https://example.com/images/signage1.jpg");
 
         Product newProduct = new Product();
-        newProduct.setId("product-signage-001");
-        newProduct.setName("Neon Box Akrilik");
-        newProduct.setDescription("Neon box akrilik berkualitas tinggi untuk branding toko Anda.");
-        newProduct.setPrice(350000);
+        newProduct.setId("product-test-" + UUID.randomUUID().toString());
+        newProduct.setName("Produk Test");
+        newProduct.setDescription("Ini adalah produk test");
+        newProduct.setPrice(100000);
         newProduct.setImageUrls(dummyImages);
         newProduct.setCategoryId("Banner & Spanduk");
         newProduct.setActive(true);
-        newProduct.setFavoriteCount(12);
-        newProduct.setSalesCount(8);
-        newProduct.setTips("Pasang di area yang terang untuk efek visual maksimal.");
         newProduct.setCreatedAt(Timestamp.now());
 
-        ToastHelper toastHelper = new ToastHelper(this);
         ProductRepository productRepository = new ProductRepository();
         productRepository.addProduct(newProduct, new FirestoreCallback<Boolean>() {
-
-
             @Override
             public void onSuccess(Boolean result) {
-                Log.d("DetailProdukByKategoriActivity", "Success");
-                toastHelper.showToast("Fail");
+                productManagementToast.showToast("Produk test berhasil ditambahkan");
             }
 
             @Override
             public void onError(Exception e) {
-                Log.d("DetailProdukByKategoriActivity", "Fail");
-                toastHelper.showToast("Fail");
+                productManagementToast.showToast("Gagal menambahkan produk test");
             }
-        }); // pastikan method ini menerima argumen Product
+        });
     }
 }
