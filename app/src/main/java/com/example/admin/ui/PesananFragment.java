@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,6 +31,7 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class PesananFragment extends Fragment  {
@@ -37,6 +39,8 @@ public class PesananFragment extends Fragment  {
     private final Handler debounceHandler = new Handler(Looper.getMainLooper());
     private Runnable debounceRunnable;
     private ToastHelper orderToast;
+
+    private  OrderAdapter orderAdapter;
 
     // Daftar kategori produk
     private final List<String> categories = Arrays.asList(
@@ -63,22 +67,39 @@ public class PesananFragment extends Fragment  {
         FloatingActionButton fabAdd = view.findViewById(R.id.btn_add_order);
         fabAdd.setOnClickListener(v -> debounce(this::showPesananModal, 500));
 
-        // Inisialisasi RecyclerView
-        RecyclerView orderViews = view.findViewById(R.id.rv_order_list);
-        orderViews.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // Dummy data untuk testing
         List<Order> dummyOrders = new ArrayList<>();
 
-        // Buat adapter dan set ke RecyclerView
-        OrderAdapter adapter = new OrderAdapter(dummyOrders);
-        orderViews.setAdapter(adapter);
+        // Inisialisasi RecyclerView
+        RecyclerView orderViews = view.findViewById(R.id.rv_order_list);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(orderViews.getContext(),
+                DividerItemDecoration.VERTICAL);
+        orderViews.addItemDecoration(dividerItemDecoration);
+        orderViews.setLayoutManager(new LinearLayoutManager(requireContext()));
 
+        // Buat adapter dan set ke RecyclerView
+        orderAdapter = new OrderAdapter(dummyOrders);
+        orderViews.setAdapter(orderAdapter);
+
+        loadOrders();
+
+        return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadOrders();
+    }
+
+    private void loadOrders() {
         new OrderRepository().getAllOrders(new OrderRepository.FirestoreCallback<List<Order>>() {
             @Override
             public void onSuccess(List<Order> orders) {
-                adapter.updateList(orders);
-                adapter.notifyDataSetChanged();
+                orders.sort(Comparator.comparing(Order::getOrderDate).reversed());
+                orderAdapter.updateList(orders);
             }
 
             @Override
@@ -86,9 +107,6 @@ public class PesananFragment extends Fragment  {
                 Toast.makeText(requireContext(), "Gagal memuat pesanan: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        return view;
     }
 
 
@@ -142,8 +160,6 @@ public class PesananFragment extends Fragment  {
 
             btnCancel.setOnClickListener(v -> dialog.dismiss());
 
-            btnCancel.setOnClickListener(v -> dialog.dismiss());
-
             dialog.show();
 
         } catch (Exception e) {
@@ -194,6 +210,7 @@ public class PesananFragment extends Fragment  {
                 public void onSuccess(String orderId) {
                     requireActivity().runOnUiThread(() -> {
                         orderToast.showToast("Pesanan berhasil disimpan!\nID: " + orderId);
+                        loadOrders();
                         dialog.dismiss();
                     });
                 }

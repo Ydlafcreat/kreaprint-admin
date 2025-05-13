@@ -9,8 +9,4 @@
         android:icon="@drawable/ic_order_fill"
         android:title="@string/pesanan_navigation" />
 
-    <item
-        android:id="@+id/profile"
-        android:icon="@drawable/ic_account"
-        android:title="@string/profil_navigation" />
 </menu>

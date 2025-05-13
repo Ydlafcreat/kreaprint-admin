@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 public class ImgurUploader {
-    private static final String IMGUR_CLIENT_ID = "28aa446e7cf218e"; // Ganti dengan Client ID Anda
+    private static final String IMGUR_CLIENT_ID = "28aa446e7cf218e";
     private static final String IMGUR_API_URL = "https://api.imgur.com/3/";
 
     public interface UploadCallback {
