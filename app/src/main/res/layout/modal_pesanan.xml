@@ -109,6 +109,7 @@
                     android:textSize="14sp"
                     android:layout_marginBottom="4dp" />
 
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -134,20 +135,12 @@
                     android:textSize="14sp"
                     android:layout_marginBottom="4dp" />
 
-                <com.google.android.material.textfield.TextInputLayout
+                <Spinner
+                    android:id="@+id/sp_kategori"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:hint="Pilih kategori">
+                    tools:listitem="@layout/dropdown_menu_item"/>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/actv_product_category"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:textColorHint="#BDBDBD"
-                        android:inputType="none"/>
-                </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Total Harga -->
                 <TextView
