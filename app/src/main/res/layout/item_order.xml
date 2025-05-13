@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="#6A2A2A"
@@ -19,6 +17,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- Nama Pelanggan -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,6 +42,7 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Nomor WhatsApp -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,6 +66,7 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
+        <!-- Detail Pesanan -->
         <TextView
             android:id="@+id/tv_order_details"
             android:layout_width="match_parent"
@@ -75,6 +76,7 @@
             android:textColor="#FFFFFF"
             android:textSize="14sp" />
 
+        <!-- Total Harga -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -99,6 +101,18 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Status Pesanan -->
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Status: Menunggu"
+            android:textColor="#FF9800"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <!-- Tombol Aksi -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

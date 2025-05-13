@@ -20,19 +20,19 @@ public class OrderRepository {
     }
 
     public void addOrder(Order order, FirestoreCallback<String> callback) {
-        // Simpan data ke Firestore sekaligus
         db.collection(COLLECTION_NAME)
                 .add(order)
                 .addOnSuccessListener(documentReference -> {
                     String docId = documentReference.getId();
                     Log.d(TAG, "Dokumen berhasil dibuat dengan ID: " + docId);
-                    callback.onSuccess(docId); // Langsung kembalikan ID dokumen
+                    callback.onSuccess(docId);
                 })
                 .addOnFailureListener(e -> {
                     Log.e(TAG, "Gagal menyimpan order: " + e.getMessage());
                     callback.onError(e);
                 });
     }
+
     public void getAllOrders(FirestoreCallback<List<Order>> callback) {
         db.collection(COLLECTION_NAME)
                 .get()
@@ -40,7 +40,7 @@ public class OrderRepository {
                     List<Order> orders = new ArrayList<>();
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                         Order order = doc.toObject(Order.class);
-                        order.setOrderId(doc.getId()); // Simpan ID dokumen ke model
+                        order.setOrderId(doc.getId());
                         orders.add(order);
                     }
                     Log.d(TAG, "Berhasil mengambil " + orders.size() + " pesanan");
@@ -52,6 +52,7 @@ public class OrderRepository {
                 });
     }
 
+    // Method untuk membatalkan order (hapus dari Firestore)
     public void deleteOrder(String orderId, FirestoreCallback<Void> callback) {
         db.collection(COLLECTION_NAME).document(orderId)
                 .delete()
@@ -65,6 +66,7 @@ public class OrderRepository {
                 });
     }
 
+    // Method untuk memperbarui status order
     public void updateOrderStatus(String orderId, String newStatus, FirestoreCallback<Void> callback) {
         db.collection(COLLECTION_NAME).document(orderId)
                 .update("status", newStatus)
