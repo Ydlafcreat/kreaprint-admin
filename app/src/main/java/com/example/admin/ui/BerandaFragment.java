@@ -77,11 +77,7 @@ public class BerandaFragment extends Fragment {
         });
 
 //        Detail manajemen Transaksi
-        TextView tvDetailTransaksi = view.findViewById(R.id.tv_detail_transaksi);
-        tvDetailTransaksi.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), TransactionManagementActivity.class);
-            startActivity(intent);
-        });
+
 
 //        Detail manajemen Produk
         TextView tvDetailProduk = view.findViewById(R.id.tv_detail_produk);
@@ -90,12 +86,7 @@ public class BerandaFragment extends Fragment {
             startActivity(intent);
         });
 
-//        Lihat Semua Produk Terlaris
-        TextView tvLihatSemua = view.findViewById(R.id.tv_lihat_semua);
-        tvLihatSemua.setOnClickListener(v -> {
-            Intent intent = new Intent(requireContext(), ProductManagementActivity.class);
-            startActivity(intent);
-        });
+//
 
         return view;
     }
