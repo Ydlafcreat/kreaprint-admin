@@ -135,4 +135,5 @@ public class MainActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putInt("CURRENT_FRAGMENT_ID", currentFragmentId);
     }
+
 }

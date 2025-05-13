@@ -111,6 +111,15 @@
                                 android:textColor="#FFFFFF"
                                 android:textSize="14sp"
                                 android:alpha="0.8" />
+                            <TextView
+                                android:id="@+id/tv_total_orders"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="350"
+                                android:textColor="#FFFFFF"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -119,16 +128,14 @@
                                 android:gravity="center_vertical">
 
                                 <ImageView
-                                    android:layout_width="16dp"
-                                    android:layout_height="16dp"
-                                    android:src="@drawable/ic_trending_up"
+                                    android:layout_width="13dp"
+                                    android:layout_height="18dp"
                                     app:tint="#4CAF50" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:text="+25% dari minggu lalu"
                                     android:textColor="#4CAF50"
                                     android:textSize="12sp" />
                             </LinearLayout>
@@ -159,9 +166,9 @@
                                 android:alpha="0.8" />
 
                             <TextView
+                                android:id="@+id/tv_avg_price"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:text="Rp 150.000"
                                 android:textColor="#FFFFFF"
                                 android:textSize="24sp"
@@ -176,14 +183,12 @@
                                 <ImageView
                                     android:layout_width="16dp"
                                     android:layout_height="16dp"
-                                    android:src="@drawable/ic_trending_down"
                                     app:tint="#F44336" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
-                                    android:text="-10% dari minggu lalu"
                                     android:textColor="#F44336"
                                     android:textSize="12sp" />
                             </LinearLayout>
